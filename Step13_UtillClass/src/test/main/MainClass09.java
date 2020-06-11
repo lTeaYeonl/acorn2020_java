@@ -27,13 +27,13 @@ public class MainClass09 {
 		h3.put("name", "김청하");
 		h3.put("addr", "동대문구");
 		
-		List<HashMap> list=new ArrayList<HashMap>();
+		List<Map<String, Object>> list=new ArrayList<>();
 		list.add((HashMap) h1);
 		list.add((HashMap)h2);
 		list.add((HashMap)h3);
 		
 		for (int i=0; i<list.size(); i++) {
-			HashMap tmp = list.get(i);
+			Map tmp = list.get(i);
 			int num=(int)tmp.get("num");
 			String name=(String)tmp.get("name");
 			String addr=(String)tmp.get("addr");
@@ -41,7 +41,7 @@ public class MainClass09 {
 			System.out.println(line);
 		}
 		System.out.println("확장 for 문을 이용하면");
-		for (HashMap tmp : list) {
+		for (Map<String, Object> tmp : list) {
 			int num=(int)tmp.get("num");
 			String name=(String)tmp.get("name");
 			String addr=(String)tmp.get("addr");
@@ -59,6 +59,6 @@ public class MainClass09 {
 		String g=(String)list.get(0).get("name");
 		String h=(String)list.get(0).get("addr");
 		
-		int i=((String).list.get(0).get("addr")).length();
+		int i=((String)list.get(0).get("addr")).length();
 	}
 }
