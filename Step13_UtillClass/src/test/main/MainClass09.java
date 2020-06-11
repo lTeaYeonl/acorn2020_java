@@ -12,25 +12,25 @@ public class MainClass09 {
 		 * 
 		 * 		HashMap 객체의 참조값을 ArrayList 객체에 순서대로 담아 보세요.
 		 */
-		HashMap<String, Object> h1=new HashMap();
+		Map<String, Object> h1=new HashMap();
 		h1.put("num", 1);
 		h1.put("name", "김지훈");
 		h1.put("addr", "성북구");
 		
-		HashMap<String, Object> h2=new HashMap();
+		Map<String, Object> h2=new HashMap();
 		h2.put("num", 2);
 		h2.put("name", "김찬미");
 		h2.put("addr", "동대문구");
 		
-		HashMap<String, Object> h3=new HashMap();
+		Map<String, Object> h3=new HashMap();
 		h3.put("num", 3);
 		h3.put("name", "김청하");
 		h3.put("addr", "동대문구");
 		
 		List<HashMap> list=new ArrayList<HashMap>();
-		list.add(h1);
-		list.add(h2);
-		list.add(h3);
+		list.add((HashMap) h1);
+		list.add((HashMap)h2);
+		list.add((HashMap)h3);
 		
 		for (int i=0; i<list.size(); i++) {
 			HashMap tmp = list.get(i);
