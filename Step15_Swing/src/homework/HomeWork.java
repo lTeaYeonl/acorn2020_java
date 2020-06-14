@@ -120,6 +120,7 @@ public class HomeWork extends JFrame implements ActionListener{
 		}
 	}
 	
+	
 	// JTextfield에 입력된 값을 int 타입으로 변환해주는 메소드
 	public void convert() {
 		if (inputNum1.getText().isEmpty() && inputNum1.getText().isEmpty()) {
