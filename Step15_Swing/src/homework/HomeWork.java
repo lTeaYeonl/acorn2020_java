@@ -3,6 +3,8 @@ package homework;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -10,7 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-public class HomeWork extends JFrame implements ActionListener{
+public class HomeWork extends JFrame implements ActionListener, KeyListener{
 //	JTextField = 10
 //	JButton = +-*/
 //	= 20 = JLabel
@@ -144,6 +146,26 @@ public class HomeWork extends JFrame implements ActionListener{
 	public void reset() {
 		inputNum1.setText("");
 		inputNum2.setText("");
+	}
+	// 키를 눌렀을때 동작하는 메소드
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// 입력한 키 코드 읽어오기
+		int code=e.getKeyCode();
+		if(code == KeyEvent.VK_ENTER) { // 엔터키를 눌렀다면 실행
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
