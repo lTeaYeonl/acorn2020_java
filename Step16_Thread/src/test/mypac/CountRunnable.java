@@ -16,7 +16,7 @@ public class CountRunnable implements Runnable{
                              try {
                                       Thread.sleep(1000);
                              } catch (InterruptedException e) {
-                                      e.printStackTrace();
+                                      e.printStackTrace(); 
                              }
                              count++; //count 를 1 증가 시킨다.
                              System.out.println("현재 카운트:"+count);
