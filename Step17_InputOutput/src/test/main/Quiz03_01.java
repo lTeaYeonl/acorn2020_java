@@ -19,10 +19,10 @@ import javax.swing.filechooser.FileSystemView;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.metal.OceanTheme;
 
-public class Quiz04 extends JFrame implements ActionListener{
+public class Quiz03_01 extends JFrame implements ActionListener{
 	
 	//생성자
-	public Quiz04() {
+	public Quiz03_01() {
 		
 		setTitle("나의 파일");
 		setLayout(new BorderLayout());
@@ -54,7 +54,7 @@ public class Quiz04 extends JFrame implements ActionListener{
 	
 	public static void main(String[] args) {
 		// 화면에 프레임을 만들어서 띄운다.
-		Quiz04 f=new Quiz04();
+		Quiz03_01 f=new Quiz03_01();
 		f.setBounds(100, 100, 500, 500);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
@@ -71,7 +71,7 @@ public class Quiz04 extends JFrame implements ActionListener{
 			if(fc.getSelectedFile().isDirectory()) {
 				System.out.println("당신이 선택한 경로는 : "+fc.getSelectedFile());
 			}
-			//선택한 파일을 access 할수 있는 파일 객체 
+			//선택한 파일을 access 할수 있는 파일 객체   
 			File selectedFile=fc.getSelectedFile();
 			System.out.println(selectedFile.getAbsolutePath());
 			
