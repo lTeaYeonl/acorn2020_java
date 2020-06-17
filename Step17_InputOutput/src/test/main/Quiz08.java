@@ -96,10 +96,11 @@ public class Quiz08 extends JFrame implements ActionListener{
 				label.setForeground(selectedColor); // 사용자가 선택한 색을 문자열 색으로 변경함
 				area.setBackground(selectedColor);
 		} else {
+			// 오픈했을때 기본경로 지정
 			JFileChooser fc=new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-			fc.setDialogTitle("커스텀 버튼 만들기");
+			fc.setDialogTitle("양 금모띠");
 			
-			int result=fc.showDialog(this, "커스텀 버튼");
+			int result=fc.showOpenDialog(this);
 			if(result == JFileChooser.APPROVE_OPTION) {
 				System.out.println(fc.getSelectedFile().getPath());
 			}else if(result == JFileChooser.CANCEL_OPTION) {
