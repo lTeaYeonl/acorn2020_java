@@ -133,7 +133,7 @@ public class HomeWork extends JFrame implements ActionListener, KeyListener{
 		} else {
 			String text1=inputNum1.getText();
 			num1=Integer.parseInt(text1);
-			String text2=inputNum2.getText();
+			String text2=inputNum2.getText();	
 			num2=Integer.parseInt(text2);
 			}
 	}

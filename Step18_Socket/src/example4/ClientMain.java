@@ -16,11 +16,25 @@ import java.net.Socket;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import org.json.JSONObject;
+/*
+ * 		메세지의 종류
+ * 
+ * 		1. 일반 대화 메세지
+ * 		   {"name" : "김지훈", "msg" : "안녕하세요"}
+ * 		2. 누군가 입장 했다는 메세지
+ * 		   {"enter" : "김지훈"}
+ * 		3. 누군가 퇴장 했다는 메세지
+ * 		   {"out" : "김지훈"}
+ * 		4. 참여자 목록 메세지
+ * 		   {"members" : ["김지훈", "김찬미", "이지은"]};  
+ */
 public class ClientMain extends JFrame 
 			implements ActionListener, KeyListener{
 	//필드
@@ -29,9 +43,15 @@ public class ClientMain extends JFrame
 	Socket socket;
 	BufferedWriter bw;
 	JTextArea area;
+	// 대화명
+	String chatName;
 	
 	//생성자
 	public ClientMain() {
+		// 대화명을 입력 받아서 필드에 저장한다
+		chatName=JOptionPane.showInputDialog(this, "대화명을 입력하세요");
+		
+		setTitle("대화명 : "+chatName);
 		//서버에 소켓 접속을 한다.
 		try {
 			//접속이 성공되면 Socket 객체의 참조값이 반환된다.
@@ -42,6 +62,13 @@ public class ClientMain extends JFrame
 			OutputStream os=socket.getOutputStream();
 			OutputStreamWriter osw=new OutputStreamWriter(os);
 			bw=new BufferedWriter(osw);
+			// 내가 입장한다고 서버에 메세지를 보낸다.
+			// {"enter" : "김지훈"};
+			// 수동 String msg="{\"enter\" : \""+chatName+"\")";
+			JSONObject jsonObj=new JSONObject();
+			jsonObj.put("enter", chatName);
+			String msg2=jsonObj.toString();
+			
 			//서버로 부터 메세지를 받을 스레드도 시작을 시킨다.
 			new ClientThread().start();
 		}catch(Exception e) {//접속이 실패하면 예외가 발생한다.
@@ -109,7 +136,7 @@ public class ClientMain extends JFrame
 		String msg=tf_msg.getText();
 		try {
 			//필드에 있는 BufferedWriter 객체의 참조값을 이용해서 서버에 문자열 출력하기 
-			bw.write(msg);
+			bw.write(chatName+" : "+msg);
 			bw.newLine();//개행기호도 출력 (서버에서 줄단위로 읽어낼 예정)
 			bw.flush();
 		}catch(Exception e2) {
