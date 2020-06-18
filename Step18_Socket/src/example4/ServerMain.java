@@ -105,6 +105,8 @@ public class ServerMain {
 			}catch(Exception e) {
 				e.printStackTrace();
 			}finally {
+				// 접속이 끊겨서 종료되는 스레드는 List에서 제거한다.
+				threadList.remove(this);
 				try {
 					if(socket!=null)socket.close();
 				}catch(Exception e) {}
