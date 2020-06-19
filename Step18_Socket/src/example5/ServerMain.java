@@ -12,6 +12,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class ServerMain {
@@ -68,6 +69,21 @@ public class ServerMain {
 				tmp.bw.flush(); //방출
 			}
 		}
+		// 참여자 목록을 얻어내서 Client에게 출력해주는 메소드
+		public void sendChatNameList() {
+			JSONObject jsonObj=new JSONObject();
+			JSONArray jsonArr=new JSONArray();
+
+			for(int i=0; i<threadList.size(); i++) {
+				ServerThread tmp=threadList.get(i);
+				jsonArr.put(i, tmp.chatName);
+			}
+
+			jsonObj.put("type", "members");
+			jsonObj.put("list", jsonArr);
+			
+//			sendMessage(jsonObj.toString());
+		}
 		
 		//새로운 작업 단위가 시작되는 run() 메소드 
 		@Override
@@ -101,17 +117,21 @@ public class ServerMain {
 					
 					//클라이언트에게 동일한 메세지를 보내는 메소드를 호출한다.
 					sendMessage(msg);
-					if(msg==null) {//클라이언트의 접속이 끈겼기 때문에 
+					if(msg==null) {//클라이언트의 접속이 끊겼기 때문에 
 						break;//반복문(while) 을 빠져 나오도록 한다. 
 					}
 				}
 			}catch(Exception e) {
 				e.printStackTrace();
 			}finally {
-				//접속이 끈겨서 종료 되는 스레드는 List에서 제거한다.
+				//접속이 끊겨서 종료 되는 스레드는 List에서 제거한다.
 				threadList.remove(this);
-				
+				// this가 퇴장한다고 메세지를 보낸다.
 				try {
+					JSONObject jsonObj=new JSONObject();
+					jsonObj.put("type", "out");
+					jsonObj.put("name", this.chatName);
+					sendMessage(jsonObj.toString());					
 					if(socket!=null)socket.close();
 				}catch(Exception e) {}
 			}
