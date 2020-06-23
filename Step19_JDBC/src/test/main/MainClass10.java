@@ -23,5 +23,6 @@ public class MainClass10 {
 		dao2.update(dto2);
 		
 		dao2.getList();
+		dao2.getData(1);
 	}
 }
