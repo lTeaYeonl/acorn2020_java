@@ -3,6 +3,8 @@ package test.frame;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -19,7 +21,7 @@ import javax.swing.table.DefaultTableModel;
 import test.dao.MemberDao;
 import test.dto.MemberDto;
 
-public class MemberFrame extends JFrame implements ActionListener {
+public class MemberFrame extends JFrame implements ActionListener, PropertyChangeListener{
 
 	// final
 	private static final String COMMAND_SAVE = "save";
@@ -72,13 +74,26 @@ public class MemberFrame extends JFrame implements ActionListener {
 		// 칼럼명을 String[] 에 순서대로 담기
 		String[] colNames= {"번호", "이름", "주소"};
 		// 테이블에 출력할 정보를 가지고 있는 모델 객체 (칼럼명, row 갯수)
-		model=new DefaultTableModel(colNames, 0);
+		model=new DefaultTableModel(colNames, 0) {
+			// 인자로 전달되는 행(row), 열(column) 수정 가능 여부를 리턴하는 메소드
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				// 만일 첫번째(0번쨰) 칼럼이면 수정이 불가 하도록 한다
+				if(column==0) {
+					return false;
+				}
+				return true;
+			}
+		};
 		// 모델을 테이블에 연결한다.
 		table.setModel(model);
 		// 스크롤이 가능 하도록 테이블을 JScrollPane 으로 감싼다
 		JScrollPane scroll=new JScrollPane(table);
 		// JScrollPane 을 프레임의 가운데에 배치하기
 		add(scroll, BorderLayout.CENTER);
+		// 회원목록 출력
+		memberShow();
+		table.addPropertyChangeListener(this);
 		
 		// JTable 에 Sample 데이터 출력해보기
 //		Object[] row1= {1, "김지훈", "성북구"};
@@ -101,6 +116,8 @@ public class MemberFrame extends JFrame implements ActionListener {
 		if (command.equals(COMMAND_SAVE)) {
 			memberSave();
 			labelClear();
+			tableClear();
+			memberShow();
 		} else if (command.equals(COMMAND_SHOW)) {
 			tableClear();
 			memberShow();
@@ -145,17 +162,22 @@ public class MemberFrame extends JFrame implements ActionListener {
 	}
 	// 회원 정보를 삭제하는 메소드
 	public void memberDelete() {
-		try {
-			// 1. 선택된 row 인덱스를 읽어온다.
-			int SelectedRowIndex=table.getSelectedRow();
+		// 1. 선택된 row 인덱스를 읽어온다.
+		int SelectedRowIndex=table.getSelectedRow();
+		if(SelectedRowIndex==-1)	 { // 선택된 row 가 없다면
+			return; // 메소드 종료
+		}
+		// 정말 삭제할것인지 확인
+		int result=JOptionPane.showConfirmDialog(this, "정말 삭제하시겠습니까?");
+		if(result==JOptionPane.YES_OPTION){
 			// 2. 선택된 row의 첫번째(0번째) 칼럼을 선택
 			int SRI_num=(int) model.getValueAt(SelectedRowIndex, 0);
 			// 3. MemberDao 객체를 이용해서 해당 데이터 삭제
 			MemberDao dao=MemberDao.getInstance();
 			dao.delete(SRI_num);
-			JOptionPane.showMessageDialog(this, SRI_num+" 번 데이터를 를 성공적으로 삭제했습니다!");
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(this, "삭제할 Row를 선택하세요");
+			JOptionPane.showMessageDialog(this, SRI_num+" 번 데이터를 삭제했습니다!");
+		} else {
+			return;
 		}
 	}
 	// 입력 필드를 초기화 하는 메소드
@@ -167,5 +189,29 @@ public class MemberFrame extends JFrame implements ActionListener {
 	// 테이블을 초기화 하는 메소드
 	public void tableClear() {
 		model.setNumRows(0);
+	}
+
+	boolean isEditing=false;
+	
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		System.out.println("Property change");
+		System.out.println(evt.getPropertyName());
+		if(evt.getPropertyName().equals("tableCellEditor")) {
+			if(isEditing) { // 수정 중 일때
+				// 변화된 값을 읽어와서 DB에 반영한다
+				// 수정된 칼럼에 있는 row 전체의 값을 읽어온다.
+				int SelectedRowIndex=table.getSelectedRow();
+				int num=(int)model.getValueAt(SelectedRowIndex, 0);
+				String name=(String)model.getValueAt(SelectedRowIndex, 1);
+				String addr=(String)model.getValueAt(SelectedRowIndex, 2);
+				// 수정할 회원의 정보를 MemberDto .객체에 담고
+				MemberDto dto=new MemberDto(num, name, addr);
+				// DB 에 저장하기
+				MemberDao.getInstance().update(dto);
+				isEditing=false; // 수정중이 아니라고 표시한다.
+			}
+			isEditing=true; // 수정중이라고 표시한다.
+		}
 	}
 }
